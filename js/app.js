@@ -1,29 +1,126 @@
 /*
  * Create a list that holds all of your cards
  */
+const cardList = document.querySelectorAll('.card');
+
+function matchCard(card1, card2) {
+    // if two cards matches turns card to green
+    // return card.className="card match";
+}
+
+// setup board
+// initialGame(cardList);
 
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
-// Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+
+
+function openCard(card) {
+    // shows the card symbol - turns blue
+    return card.className = "card open show";
+}
+
+
+(function() {
+
+    /*
+     * Display the cards on the page
+     *   - shuffle the list of cards using the provided "shuffle" method below
+     *   - loop through each card and create its HTML
+     *   - add each card's HTML to the page
+     */
+
+    // Shuffle function from http://stackoverflow.com/a/2450976
+    function shuffle(array) {
+        var currentIndex = array.length,
+            temporaryValue, randomIndex;
+
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
     }
 
-    return array;
-}
+    // methods
+    function initialGame(cardlist) {
+        // make all cards open/starting position
+        cardlist.forEach(function(card) {
+            return openCard(card);
+        })
+    }
+
+    // then add eventHandler for each card when it's clicked
+    function addEvent(cardlist, event) {
+        return cardlist.forEach(card => {
+            return card.addEventListener('click', event);
+        });
+    }
+
+    function flipOverCard(card) {
+        // turns over the card
+        return card.className = "card";
+    }
+
+
+    function startingGame(cardlist) {
+        initialGame(cardlist);
+        // shuffle cards
+        // flip over cards
+        setTimeout(function() {
+            cardlist.forEach(card => {
+                return flipOverCard(card);
+            });
+        }, 2000);
+
+        // click and show card
+        cardList.forEach(card => {
+            return card.addEventListener('click', function() {
+                return openCard(card);
+            });
+        });
+    }
+
+    // start game
+    startingGame(cardList);
+
+    // restart game
+    const re = document.getElementsByClassName('restart')[0];
+    re.addEventListener('click', function() {
+        return startingGame(cardList);
+    });
+
+
+
+
+
+    // check if the first two cards clicked equal
+    /// check if there are two cards on the grid that has the class 'card open show'
+    /// if it does 
+    // otherwise flip them back over;
+
+
+
+})(cardList);
+
+
+// Issues:
+// when more than two cards are clicked, then the first item is flippedOver
+// also must store the matches
+// must count score for 
+
+
+
+
+
+
+
+
 
 
 /*
