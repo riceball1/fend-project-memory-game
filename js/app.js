@@ -3,33 +3,15 @@
  */
 const cardList = document.querySelectorAll('.card');
 
-function matchCard(card1, card2) {
-    // if two cards matches turns card to green
-    // return card.className="card match";
-}
-
-// setup board
-// initialGame(cardList);
-
-
-
-
-
-
-function openCard(card) {
-    // shows the card symbol - turns blue
-    return card.className = "card open show";
-}
-
 
 (function() {
 
-    /*
-     * Display the cards on the page
-     *   - shuffle the list of cards using the provided "shuffle" method below
-     *   - loop through each card and create its HTML
-     *   - add each card's HTML to the page
-     */
+    // Variables
+    let matchingList = [];
+    let matches = [];
+    const movesSpan = document.getElementsByClassName('moves');
+    let movesCounter = 3;
+    const re = document.getElementsByClassName('restart')[0];
 
     // Shuffle function from http://stackoverflow.com/a/2450976
     function shuffle(array) {
@@ -47,12 +29,22 @@ function openCard(card) {
         return array;
     }
 
+    function matchCard(card) {
+        // if two cards matches turns card to green
+        return card.className = "card match";
+    }
+
     // methods
     function initialGame(cardlist) {
         // make all cards open/starting position
         cardlist.forEach(function(card) {
             return openCard(card);
         })
+    }
+
+    function openCard(card) {
+        // shows the card symbol - turns blue
+        return card.className = "card open show";
     }
 
     // then add eventHandler for each card when it's clicked
@@ -67,10 +59,56 @@ function openCard(card) {
         return card.className = "card";
     }
 
+    function checkMatch(card) {
 
-    function startingGame(cardlist) {
+        // check matches
+        let firstCard = matchingList[0].innerHTML.toString();
+        let secondCard = card.innerHTML.toString();
+        console.log(firstCard, secondCard);
+        if (firstCard === secondCard) {
+            // push two items into the matches array
+            matches.push(matchingList[0], card);
+            // clear the matchingList;
+            matchingList = [];
+            return true;
+        }
+        return false;
+
+    }
+
+
+    function checkingMoves(counter) {
+        counter--;
+        movesSpan.innerHTML = counter;
+        console.log(movesCounter);
+        console.log('counter', counter);
+    }
+
+
+    function checkGameCompletion(matcheslist, cardlist) {
+        if (matcheslist.length === cardlist.length) {
+            return true;
+        }
+        return false;
+    }
+
+    re.addEventListener('click', function() {
+        // reset values for finding out matches
+        matchingList = [];
+        matches = [];
+        return setupGame(cardList);
+    });
+
+    function setupGame(cardlist) {
+        /*
+         * Display the cards on the page
+         *   - shuffle the list of cards using the provided "shuffle" method below
+         *   - loop through each card and create its HTML
+         *   - add each card's HTML to the page
+         */
         initialGame(cardlist);
         // shuffle cards
+
         // flip over cards
         setTimeout(function() {
             cardlist.forEach(card => {
@@ -81,31 +119,42 @@ function openCard(card) {
         // click and show card
         cardList.forEach(card => {
             return card.addEventListener('click', function() {
-                return openCard(card);
+                // opens the card
+                openCard(card);
+                matchingList.push(card);
+                if (matchingList.length === 2) {
+                    // check if it matches
+                    if (checkMatch(card)) {
+                        console.log('These cards match');
+                        matches.forEach(card => {
+                            return matchCard(card);
+                        })
+                        matchingList = [];
+                    } else {
+                        console.log('No match, resetting matchingList');
+                        // slow down the flipover;
+                        setTimeout(function() {
+                            flipOverCard(matchingList[0]);
+                            flipOverCard(matchingList[1]);
+                            matchingList = [];
+                        }, 1000)
+                    }
+                    // checkingMoves(movesCounter);
+                    if (checkGameCompletion(matches, cardList)) {
+                        console.log('Game Over!');
+                        // display a game over button, then give option to restart game?
+                        setupGame(cardList); // auto restart
+                    } else {
+                        console.log('Keep Playing');
+                    }
+                }
+
             });
         });
-    }
+    } // end of setupGame function
 
-    // start game
-    startingGame(cardList);
-
-    // restart game
-    const re = document.getElementsByClassName('restart')[0];
-    re.addEventListener('click', function() {
-        return startingGame(cardList);
-    });
-
-
-
-
-
-    // check if the first two cards clicked equal
-    /// check if there are two cards on the grid that has the class 'card open show'
-    /// if it does 
-    // otherwise flip them back over;
-
-
-
+    /** INITATE GAME **/
+    setupGame(cardList);
 })(cardList);
 
 
@@ -113,15 +162,6 @@ function openCard(card) {
 // when more than two cards are clicked, then the first item is flippedOver
 // also must store the matches
 // must count score for 
-
-
-
-
-
-
-
-
-
 
 /*
  * set up the event listener for a card. If a card is clicked:
