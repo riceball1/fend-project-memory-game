@@ -27,7 +27,6 @@ function shuffle(array) {
     return array;
 }
 
-
 function shuffleCards(cardlist) {
     let symbols = [];
     cardlist.forEach(card => {
@@ -38,10 +37,10 @@ function shuffleCards(cardlist) {
 }
 
 const shuffledCardList = shuffleCards(cardList);
-
-console.log(shuffledCardList[0]);
-
-
+const deck = document.getElementsByClassName('deck');
+for(let i = 0; i < shuffledCardList.length; i++) {
+    document.append(shuffledCardList[0]);
+}
 
 function matchCard(card) {
     // if two cards matches turns card to green
