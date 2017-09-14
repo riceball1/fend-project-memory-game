@@ -8,8 +8,10 @@ let matches = [];
 const movesSpan = document.getElementsByClassName('moves');
 let movesCounter = 3;
 const re = document.getElementsByClassName('restart')[0];
-// const deck = document.getElementsByClassName('deck');
-// functions
+const winnerModal = document.getElementById('winner');
+const loserModal = document.getElementById('loser');
+
+/** METHODS **/
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -94,19 +96,19 @@ function checkingMoves(counter) {
 
 function checkGameCompletion(matcheslist, cardlist) {
     if (matcheslist.length === cardlist.length) {
+        winnerModal.style.display = "block";
         return true;
     }
     return false;
 }
 
 function setupGame(cardlist) {
+    // initally sets up the game
     initialGame(cardlist);
+
     // shuffle cards
-
     const shuffledCardList = shuffleCards(cardList);
-
     const deckLi = document.getElementsByClassName('deck')[0].children;
-
     for (let i = 0; i < deckLi.length; i++) {
         deckLi[i].innerHTML = '<i class="' + shuffledCardList[i] + '"></i>';
     }
@@ -117,6 +119,29 @@ function setupGame(cardlist) {
             return flipOverCard(card);
         });
     }, 2000);
+
+    // reset button
+    re.addEventListener('click', function() {
+        // reset values for finding out matches
+        matchingList = [];
+        matches = [];
+        return setupGame(cardList);
+    });
+
+    // play again button
+    const playagain = document.getElementsByClassName('restart');
+    for(let i = 0; i < playagain.length; i++) {
+        
+        playagain[i].addEventListener('click', function() {
+            // reset values for finding out matches
+            matchingList = [];
+            matches = [];
+            // FIX: can I identify if the loser or winner modal is activated to avoid extra css?
+            winnerModal.style.display = "none";
+            loserModal.style.display = "none";
+            return setupGame(cardList);
+        });
+    };
 
     // click and show card
     cardList.forEach(card => {
@@ -160,22 +185,11 @@ function setupGame(cardlist) {
 
 (function() {
 
-    re.addEventListener('click', function() {
-        // reset values for finding out matches
-        matchingList = [];
-        matches = [];
-        return setupGame(cardList);
-    });
-
     /** INITATE GAME **/
     setupGame(cardList);
 })(cardList);
 
 
-// Issues:
-// when more than two cards are clicked, then the first item is flippedOver
-// also must store the matches
-// must count score for 
 
 /*
  * set up the event listener for a card. If a card is clicked:
