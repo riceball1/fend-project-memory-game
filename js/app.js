@@ -8,7 +8,7 @@ let matches = [];
 const movesSpan = document.getElementsByClassName('moves');
 let movesCounter = 3;
 const re = document.getElementsByClassName('restart')[0];
-
+// const deck = document.getElementsByClassName('deck');
 // functions
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -30,17 +30,12 @@ function shuffle(array) {
 function shuffleCards(cardlist) {
     let symbols = [];
     cardlist.forEach(card => {
-        symbols.push(card.children[0]);
+        symbols.push(card.children[0].className);
     });
     // returns an array of symbols
     return shuffle(symbols);
 }
 
-const shuffledCardList = shuffleCards(cardList);
-const deck = document.getElementsByClassName('deck');
-for(let i = 0; i < shuffledCardList.length; i++) {
-    document.append(shuffledCardList[0]);
-}
 
 function matchCard(card) {
     // if two cards matches turns card to green
@@ -105,22 +100,16 @@ function checkGameCompletion(matcheslist, cardlist) {
 }
 
 function setupGame(cardlist) {
-    /*
-     * Display the cards on the page
-     *   - shuffle the list of cards using the provided "shuffle" method below
-     *   - loop through each card and create its HTML
-     *   - add each card's HTML to the page
-     */
     initialGame(cardlist);
     // shuffle cards
 
+    const shuffledCardList = shuffleCards(cardList);
 
-    /* 
-    for (var i = 0; i < symbols.length; i++) {
-    cardHolder.append('<li class="card"><i class="fa fa-' + symbols[i] + '><li>') // add each symbol to card HTML
+    const deckLi = document.getElementsByClassName('deck')[0].children;
+
+    for (let i = 0; i < deckLi.length; i++) {
+        deckLi[i].innerHTML = '<i class="' + shuffledCardList[i] + '"></i>';
     }
-    */
-
 
     // flip over cards
     setTimeout(function() {
@@ -150,7 +139,7 @@ function setupGame(cardlist) {
                         flipOverCard(matchingList[0]);
                         flipOverCard(matchingList[1]);
                         matchingList = [];
-                    }, 1000)
+                    }, 400)
                 }
                 // checkingMoves(movesCounter);
                 if (checkGameCompletion(matches, cardList)) {
