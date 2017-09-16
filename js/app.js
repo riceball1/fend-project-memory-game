@@ -10,6 +10,8 @@ let movesCounter = 3;
 const re = document.getElementsByClassName('restart')[0];
 const winnerModal = document.getElementById('winner');
 const loserModal = document.getElementById('loser');
+let counter = 0;
+
 
 /** METHODS **/
 
@@ -102,6 +104,15 @@ function checkGameCompletion(matcheslist, cardlist) {
     return false;
 }
 
+function countUpTimer() {
+    if(counter >= 10) {
+        return counter;
+    }
+    counter++;
+    setTimeout(countUpTimer, 1000);
+}
+
+
 function setupGame(cardlist) {
     // initally sets up the game
     initialGame(cardlist);
@@ -119,6 +130,20 @@ function setupGame(cardlist) {
             return flipOverCard(card);
         });
     }, 2000);
+
+    // start timer
+    const scorePanel = document.getElementsByClassName('score-panel')[0];
+    scorePanel.innerHTML += '<p id="timer">%time%</p>';
+    countUpTimer();
+    while(counter >= 10) {
+        console.log(counter);
+        // const timer = document.getElementsByClassName('timer')[0];
+        document.getElementById('timer').innerHTML = 'Time: ' + counter.toString() + ' seconds';
+        }
+    
+    
+
+    
 
     // reset button
     re.addEventListener('click', function() {
