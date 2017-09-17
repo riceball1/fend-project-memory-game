@@ -85,6 +85,15 @@ function checkMatch(card) {
 function checkingMoves() {
     const movesSpan = document.getElementsByClassName('moves')[0];
     const starsList = document.getElementsByClassName('stars')[0];
+    if(movesCounter % 2 === 0 && movesCounter > 0) {
+        if(starsList.childNodes[0]) {
+            if(stars > 0) {
+              stars--;  
+            }
+            starsList.removeChild(starsList.childNodes[0]);
+        }
+    }
+    
     // remove an li - star from the starsList after certain number of moves
     // starsList.removeChild()
    movesCounter++; 
