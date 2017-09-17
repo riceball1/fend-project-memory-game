@@ -101,7 +101,7 @@ function checkGameCompletion(matcheslist, cardlist) {
     return false;
 }
 
-const counting = setInterval(function() {
+let counting = setInterval(function() {
             countingUp()
         }, 1000);
 
@@ -119,23 +119,21 @@ function stopCounting() {
 
 function setUpTimer() {
     const scorePanel = document.getElementsByClassName('score-panel')[0];
-    if (document.getElementById('timer')) {
-        console.log('it works here');
-        let timer = document.getElementById('timer');
-        gameOverStatus = false;
+    let timer = document.getElementById('timer');
+    // timer exists then just reset the setInterval counter
+    if (timer !== null) {
         timer.innerHTML = '0 seconds';
-        // doesn't run the setInterval again after restarting?
-        // maybe something to do with the clearInterval feature?
+        counter = 0;
+        gameOverStatus = false;
+        counting = setInterval(function() {
+            countingUp()
+        }, 1000);
     } else {
         scorePanel.innerHTML += '<p id="timer">0 seconds</p>';
         counting;
     }
 
-    // sets the gameOverStatus (1 - 5 seconds on counter);
-    setInterval(function() {
-        gameOverStatus = true;
-    }, 4000);
-
+    // need something to stop the timer
 }
 
 
@@ -167,7 +165,8 @@ function setupGame(cardlist) {
         // reset values for finding out matches
         matchingList = [];
         matches = [];
-        return setupGame(cardList);
+        gameOverStatus = false;
+        setupGame(cardList);
     });
 
     // play again button
