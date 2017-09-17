@@ -5,8 +5,7 @@ const cardList = document.querySelectorAll('.card');
 // Variables
 let matchingList = [];
 let matches = [];
-const movesSpan = document.getElementsByClassName('moves');
-let movesCounter = 3;
+let movesCounter = 0;
 const re = document.getElementsByClassName('restart')[0];
 const winnerModal = document.getElementById('winner');
 const loserModal = document.getElementById('loser');
@@ -86,11 +85,13 @@ function checkMatch(card) {
     return false;
 }
 
-function checkingMoves(counter) {
-    counter--;
-    movesSpan.innerHTML = counter;
-    console.log(movesCounter);
-    console.log('counter', counter);
+function checkingMoves() {
+    const movesSpan = document.getElementsByClassName('moves')[0];
+    const starsList = document.getElementsByClassName('stars')[0];
+    // remove an li - star from the starsList after certain number of moves
+    // starsList.removeChild()
+   movesCounter++; 
+   movesSpan.innerHTML = movesCounter;
 }
 
 function checkGameCompletion(matcheslist, cardlist) {
@@ -110,7 +111,12 @@ function countingUp() {
         stopCounting();
     }
     counter++;
-    document.getElementById('timer').innerHTML = counter + ' seconds';
+    if(counter > 60) {
+        document.getElementById('timer').innerHTML = Number((counter / 60).toFixed(3)) + ' minutes';
+    } else {
+        document.getElementById('timer').innerHTML = counter + ' seconds';
+    }
+    
 }
 
 function stopCounting() {
@@ -190,7 +196,12 @@ function setupGame(cardlist) {
             // opens the card
             openCard(card);
             matchingList.push(card);
+
             if (matchingList.length === 2) {
+                // add # of moves to moveCounter
+                // changes star ratings based on # of moves
+                checkingMoves();
+
                 // check if it matches
                 if (checkMatch(card)) {
                     console.log('These cards match');
@@ -200,7 +211,7 @@ function setupGame(cardlist) {
                     matchingList = [];
                 } else {
                     console.log('No match, resetting matchingList');
-                    // slow down the flipover;
+                    // slow down the flipover
                     setTimeout(function() {
                         flipOverCard(matchingList[0]);
                         flipOverCard(matchingList[1]);
