@@ -11,7 +11,7 @@ const re = document.getElementsByClassName('restart')[0];
 const winnerModal = document.getElementById('winner');
 const loserModal = document.getElementById('loser');
 let counter = 0;
-
+let gameOverStatus = false;
 
 /** METHODS **/
 
@@ -72,7 +72,6 @@ function flipOverCard(card) {
 }
 
 function checkMatch(card) {
-
     // check matches
     let firstCard = matchingList[0].innerHTML.toString();
     let secondCard = card.innerHTML.toString();
@@ -85,7 +84,6 @@ function checkMatch(card) {
         return true;
     }
     return false;
-
 }
 
 function checkingMoves(counter) {
@@ -95,7 +93,6 @@ function checkingMoves(counter) {
     console.log('counter', counter);
 }
 
-
 function checkGameCompletion(matcheslist, cardlist) {
     if (matcheslist.length === cardlist.length) {
         winnerModal.style.display = "block";
@@ -104,13 +101,44 @@ function checkGameCompletion(matcheslist, cardlist) {
     return false;
 }
 
-function countUpTimer() {
-    if(counter >= 10) {
-        return counter;
+const counting = setInterval(function() {
+            countingUp()
+        }, 1000);
+
+function countingUp() {
+    if (gameOverStatus) {
+        stopCounting();
     }
     counter++;
-    setTimeout(countUpTimer, 1000);
+    document.getElementById('timer').innerHTML = counter + ' seconds';
 }
+
+function stopCounting() {
+    clearInterval(counting);
+}
+
+function setUpTimer() {
+    const scorePanel = document.getElementsByClassName('score-panel')[0];
+    if (document.getElementById('timer')) {
+        console.log('it works here');
+        let timer = document.getElementById('timer');
+        gameOverStatus = false;
+        timer.innerHTML = '0 seconds';
+        // doesn't run the setInterval again after restarting?
+        // maybe something to do with the clearInterval feature?
+    } else {
+        scorePanel.innerHTML += '<p id="timer">0 seconds</p>';
+        counting;
+    }
+
+    // sets the gameOverStatus (1 - 5 seconds on counter);
+    setInterval(function() {
+        gameOverStatus = true;
+    }, 4000);
+
+}
+
+
 
 
 function setupGame(cardlist) {
@@ -132,18 +160,7 @@ function setupGame(cardlist) {
     }, 2000);
 
     // start timer
-    const scorePanel = document.getElementsByClassName('score-panel')[0];
-    scorePanel.innerHTML += '<p id="timer">%time%</p>';
-    countUpTimer();
-    while(counter >= 10) {
-        console.log(counter);
-        // const timer = document.getElementsByClassName('timer')[0];
-        document.getElementById('timer').innerHTML = 'Time: ' + counter.toString() + ' seconds';
-        }
-    
-    
-
-    
+    setUpTimer();
 
     // reset button
     re.addEventListener('click', function() {
@@ -155,8 +172,8 @@ function setupGame(cardlist) {
 
     // play again button
     const playagain = document.getElementsByClassName('restart');
-    for(let i = 0; i < playagain.length; i++) {
-        
+    for (let i = 0; i < playagain.length; i++) {
+
         playagain[i].addEventListener('click', function() {
             // reset values for finding out matches
             matchingList = [];
