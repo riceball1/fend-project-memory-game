@@ -1,16 +1,14 @@
-/*
- * Create a list that holds all of your cards
- */
-const cardList = document.querySelectorAll('.card');
+
 // Variables
 let matchingList = [];
 let matches = [];
 let movesCounter = 0;
 const re = document.getElementsByClassName('restart')[0];
 const winnerModal = document.getElementById('winner');
-const loserModal = document.getElementById('loser');
+// const loserModal = document.getElementById('loser');
 let counter = 0;
 let gameOverStatus = false;
+let stars = 3;
 
 /** METHODS **/
 
@@ -74,7 +72,6 @@ function checkMatch(card) {
     // check matches
     let firstCard = matchingList[0].innerHTML.toString();
     let secondCard = card.innerHTML.toString();
-    // console.log(firstCard, secondCard);
     if (firstCard === secondCard) {
         // push two items into the matches array
         matches.push(matchingList[0], card);
@@ -111,12 +108,8 @@ function countingUp() {
         stopCounting();
     }
     counter++;
-    if(counter > 60) {
-        document.getElementById('timer').innerHTML = Number((counter / 60).toFixed(3)) + ' minutes';
-    } else {
-        document.getElementById('timer').innerHTML = counter + ' seconds';
-    }
-    
+    // only counts up in seconds (need formula to count up in minutes);
+    document.getElementById('timer').innerHTML = counter + ' seconds';
 }
 
 function stopCounting() {
@@ -142,15 +135,50 @@ function setUpTimer() {
     // need something to stop the timer
 }
 
+function resetScorePanel() {
+    movesCounter = 0;
+     const movesSpan = document.getElementsByClassName('moves')[0];
+     movesSpan.innerHTML = movesCounter;
+    // star rating reset
+}
 
 
+function setupRestartButton(cardlist) {
+ // play again button
+    const playagain = document.getElementsByClassName('restart');
 
-function setupGame(cardlist) {
+    for(let i = 0; i < playagain.length; i++) {
+       playagain[i].addEventListener('click', function() {
+        // reset values for finding out matches
+        matchingList = [];
+        matches = [];
+        // reset score Panel
+        resetScorePanel();
+        winnerModal.style.display = "none";
+        setupGame();
+    }); 
+    }
+    
+}
+
+
+/** 
+
+TO DO: 
+1) restarting game creates issue with click function
+2) removed stars and add value to the modal
+**/
+
+
+function setupGame() {
+    // list holds all cards
+    const cardlist = document.querySelectorAll('.card');
+    console.log(cardlist.length, matches.length, matchingList.length);
     // initally sets up the game
     initialGame(cardlist);
 
     // shuffle cards
-    const shuffledCardList = shuffleCards(cardList);
+    const shuffledCardList = shuffleCards(cardlist);
     const deckLi = document.getElementsByClassName('deck')[0].children;
     for (let i = 0; i < deckLi.length; i++) {
         deckLi[i].innerHTML = '<i class="' + shuffledCardList[i] + '"></i>';
@@ -163,35 +191,12 @@ function setupGame(cardlist) {
         });
     }, 2000);
 
-    // start timer
+   
     setUpTimer();
-
-    // reset button
-    re.addEventListener('click', function() {
-        // reset values for finding out matches
-        matchingList = [];
-        matches = [];
-        gameOverStatus = false;
-        setupGame(cardList);
-    });
-
-    // play again button
-    const playagain = document.getElementsByClassName('restart');
-    for (let i = 0; i < playagain.length; i++) {
-
-        playagain[i].addEventListener('click', function() {
-            // reset values for finding out matches
-            matchingList = [];
-            matches = [];
-            // FIX: can I identify if the loser or winner modal is activated to avoid extra css?
-            winnerModal.style.display = "none";
-            loserModal.style.display = "none";
-            return setupGame(cardList);
-        });
-    };
+    setupRestartButton(cardlist);
 
     // click and show card
-    cardList.forEach(card => {
+    cardlist.forEach(card => {
         return card.addEventListener('click', function() {
             // opens the card
             openCard(card);
@@ -204,13 +209,11 @@ function setupGame(cardlist) {
 
                 // check if it matches
                 if (checkMatch(card)) {
-                    console.log('These cards match');
                     matches.forEach(card => {
                         return matchCard(card);
                     })
                     matchingList = [];
                 } else {
-                    console.log('No match, resetting matchingList');
                     // slow down the flipover
                     setTimeout(function() {
                         flipOverCard(matchingList[0]);
@@ -219,12 +222,10 @@ function setupGame(cardlist) {
                     }, 400)
                 }
                 // checkingMoves(movesCounter);
-                if (checkGameCompletion(matches, cardList)) {
-                    console.log('Game Over!');
-                    // display a game over button, then give option to restart game?
-                    setupGame(cardList); // auto restart
-                } else {
-                    console.log('Keep Playing');
+                if (checkGameCompletion(matches, cardlist)) {
+                    gameOverStatus = true;
+                    const winnerMessage = document.getElementById('winner-message');
+                    winnerMessage.innerHTML = 'Congratulations! You completed the game in ' + (counter + 1) + ' seconds and with ' + stars + ' stars left';
                 }
             }
         });
@@ -236,10 +237,9 @@ function setupGame(cardlist) {
 // INITATE GAME AT START OF THE APP
 
 (function() {
-
     /** INITATE GAME **/
-    setupGame(cardList);
-})(cardList);
+    setupGame();
+})();
 
 
 
