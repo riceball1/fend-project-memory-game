@@ -8,7 +8,7 @@
 ## Description
 
 - Game automatically starts when you click on the cards, as well as a timer
-- 3 stars will indicate how many lives you have left, every two moves you make wrong will deduct one star, once you run out of stars the modal will automatically pop up with a loser message, you have the option to play again
+- 3 stars will indicate how many lives you have left, every two moves you make wrong will deduct one star
 - Moves is a moves counter that will track how many times you try to make two pairs match
 - Restart Button : Restarts the Game
 - Clicking on two cards to match
