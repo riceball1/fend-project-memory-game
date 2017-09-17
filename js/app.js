@@ -5,7 +5,6 @@ let matches = [];
 let movesCounter = 0;
 const re = document.getElementsByClassName('restart')[0];
 const winnerModal = document.getElementById('winner');
-// const loserModal = document.getElementById('loser');
 let counter = 0;
 let gameOverStatus = false;
 let stars = 3;
@@ -94,8 +93,6 @@ function checkingMoves() {
         }
     }
     
-    // remove an li - star from the starsList after certain number of moves
-    // starsList.removeChild()
    movesCounter++; 
    movesSpan.innerHTML = movesCounter;
 }
@@ -141,7 +138,6 @@ function setUpTimer() {
         counting;
     }
 
-    // need something to stop the timer
 }
 
 function resetScorePanel() {
@@ -149,6 +145,16 @@ function resetScorePanel() {
      const movesSpan = document.getElementsByClassName('moves')[0];
      movesSpan.innerHTML = movesCounter;
     // star rating reset
+    const starsList = document.getElementsByClassName('stars')[0];
+    starsList.innerHTML = '';
+
+    for(let i = 0; i < 3 ; i++) {
+        let node = document.createElement('LI');
+        let starNode = document.createElement('i')
+        starNode.className = 'fa fa-star';
+        node.appendChild(starNode);
+        starsList.appendChild(node);
+    }
 }
 
 
@@ -169,14 +175,6 @@ function setupRestartButton(cardlist) {
     }
     
 }
-
-
-/** 
-
-TO DO: 
-1) restarting game creates issue with click function
-2) removed stars and add value to the modal
-**/
 
 
 function setupGame() {
@@ -242,7 +240,6 @@ function setupGame() {
 } // end of setupGame function
 
 
-
 // INITATE GAME AT START OF THE APP
 
 (function() {
@@ -250,15 +247,3 @@ function setupGame() {
     setupGame();
 })();
 
-
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */

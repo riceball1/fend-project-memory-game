@@ -16,6 +16,7 @@
     - if match cards will remain open and turn green
 - Once all cards have been matched game a congratulations modal will pop up with the option to play again
 
+
 ## Contributing
 
 This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
