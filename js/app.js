@@ -197,6 +197,12 @@ function setupGame() {
     // initally sets up the game
     initialGame(cardlist);
 
+    // reenable click on all cards:
+    cardlist.forEach(card => {
+        return card.style.pointerEvents = "visible";
+    });
+
+
     // shuffle cards
     const shuffledCardList = shuffleCards(cardlist);
     const deckLi = document.getElementsByClassName('deck')[0].children;
@@ -220,6 +226,7 @@ function setupGame() {
         return card.addEventListener('click', function() {
             // opens the card
             openCard(card);
+
             matchingList.push(card);
 
             if (matchingList.length === 2) {
