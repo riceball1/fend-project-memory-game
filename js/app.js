@@ -1,3 +1,12 @@
+/**
+
+Fixes to make:
+1) clicking more than once on a card activates the move counter
+2) restarting the cards the cards automatically gets the 'match' class
+
+**/
+
+
 
 // Variables
 let matchingList = [];
@@ -72,6 +81,9 @@ function checkMatch(card) {
     let firstCard = matchingList[0].innerHTML.toString();
     let secondCard = card.innerHTML.toString();
     if (firstCard === secondCard) {
+        // disable click on both cards:
+        matchingList[0].style.pointerEvents = "none";
+        card.style.pointerEvents = "none";
         // push two items into the matches array
         matches.push(matchingList[0], card);
         // clear the matchingList;
@@ -146,8 +158,10 @@ function resetScorePanel() {
      movesSpan.innerHTML = movesCounter;
     // star rating reset
     const starsList = document.getElementsByClassName('stars')[0];
+    // clears the childNodes
     starsList.innerHTML = '';
 
+    // append 3 stars for childNodes to starsList
     for(let i = 0; i < 3 ; i++) {
         let node = document.createElement('LI');
         let starNode = document.createElement('i')
@@ -180,7 +194,6 @@ function setupRestartButton(cardlist) {
 function setupGame() {
     // list holds all cards
     const cardlist = document.querySelectorAll('.card');
-    console.log(cardlist.length, matches.length, matchingList.length);
     // initally sets up the game
     initialGame(cardlist);
 
