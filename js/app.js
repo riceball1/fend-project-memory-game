@@ -55,7 +55,7 @@ function matchCard(card) {
 function initialGame(cardlist) {
     // make all cards open/starting position
     cardlist.forEach(function(card) {
-        return openCard(card);
+        return flipOverCard(card);
     })
 }
 
