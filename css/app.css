@@ -29,8 +29,10 @@ body {
 }
 
 h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
+    font-family: 'Bungee Inline', sans-serif;
+    font-weight: bold;
+    font-size: 3em;
+    color: teal;
 }
 
 /*
@@ -87,7 +89,7 @@ h1 {
 
 .score-panel {
     text-align: left;
-    width: 345px;
+    width: 600px;
     margin-bottom: 10px;
 }
 
@@ -108,6 +110,12 @@ h1 {
     cursor: pointer;
 }
 
+#timer {
+    float: right;
+    display: inline-block;
+    margin-right: 10px;
+    color: teal;
+}
 
 
 /** MODAL CSS **/
@@ -135,4 +143,30 @@ h1 {
     width: 80%; /* Could be more or less, depending on screen size */
 }
 
+/*Responsiveness for smaller screen*/
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 2em;
+    }
+
+    .score-panel {
+        font-size: 1em;
+        width: 90%;
+    }
+
+    .score-panel .restart {
+        font-size: 1.2em;
+    }
+    .deck {
+        width: 330px;
+        min-height: 330px;
+    }
+
+    .deck .card {
+        width: 62.5px;
+        height: 62.5px
+    }
+    
+}
 

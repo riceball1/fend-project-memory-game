@@ -133,7 +133,7 @@ function setUpTimer() {
     const scorePanel = document.getElementsByClassName('score-panel')[0];
     const timer = document.getElementById('timer');
     if (timer === null) {
-        scorePanel.innerHTML += '<p id="timer">0 seconds</p>';
+        scorePanel.innerHTML += '<div id="timer">0 seconds</div>';
     } else {
         timer.innerHTML = '0 seconds';
     }
