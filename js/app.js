@@ -19,6 +19,7 @@ const winnerModal = document.getElementById('winner');
 let counter = 0;
 let gameOverStatus = false;
 let stars = 3;
+let hasGameStarted = false;
 
 /** METHODS **/
 
@@ -79,7 +80,6 @@ function flipOverCard(card) {
 }
 
 function checkMatch(card) {
-    console.log('checkMatch list 0', matchingList[0]);
     // check matches
     let firstCard = matchingList[0].innerHTML.toString();
     let secondCard = card.innerHTML.toString();
@@ -99,17 +99,17 @@ function checkMatch(card) {
 function checkingMoves() {
     const movesSpan = document.getElementsByClassName('moves')[0];
     const starsList = document.getElementsByClassName('stars')[0];
-    if(movesCounter % 2 === 0 && movesCounter > 0) {
-        if(starsList.childNodes[0]) {
-            if(stars > 0) {
-              stars--;  
+    if (movesCounter % 2 === 0 && movesCounter > 0) {
+        if (starsList.childNodes[0]) {
+            if (stars > 0) {
+                stars--;
             }
             starsList.removeChild(starsList.childNodes[0]);
         }
     }
-    
-   movesCounter++; 
-   movesSpan.innerHTML = movesCounter;
+
+    movesCounter++;
+    movesSpan.innerHTML = movesCounter;
 }
 
 function checkGameCompletion(matcheslist, cardlist) {
@@ -121,8 +121,8 @@ function checkGameCompletion(matcheslist, cardlist) {
 }
 
 let counting = setInterval(function() {
-            countingUp()
-        }, 1000);
+    countingUp()
+}, 1000);
 
 function countingUp() {
     if (gameOverStatus) {
@@ -145,27 +145,31 @@ function setUpTimer() {
         timer.innerHTML = '0 seconds';
         counter = 0;
         gameOverStatus = false;
-        counting = setInterval(function() {
-            countingUp()
-        }, 1000);
+        if (hasGameStarted) {
+            counting = setInterval(function() {
+                countingUp()
+            }, 1000);
+        }
+
     } else {
         scorePanel.innerHTML += '<p id="timer">0 seconds</p>';
-        counting;
+        if (hasGameStarted) {
+            counting;
+        }
     }
-
 }
 
 function resetScorePanel() {
     movesCounter = 0;
-     const movesSpan = document.getElementsByClassName('moves')[0];
-     movesSpan.innerHTML = movesCounter;
+    const movesSpan = document.getElementsByClassName('moves')[0];
+    movesSpan.innerHTML = movesCounter;
     // star rating reset
     const starsList = document.getElementsByClassName('stars')[0];
     // clears the childNodes
     starsList.innerHTML = '';
 
     // append 3 stars for childNodes to starsList
-    for(let i = 0; i < 3 ; i++) {
+    for (let i = 0; i < 3; i++) {
         let node = document.createElement('LI');
         let starNode = document.createElement('i')
         starNode.className = 'fa fa-star';
@@ -176,31 +180,38 @@ function resetScorePanel() {
 
 
 function setupRestartButton(cardlist) {
- // play again button
+    // play again button
     const playagain = document.getElementsByClassName('restart');
 
-    for(let i = 0; i < playagain.length; i++) {
-       playagain[i].addEventListener('click', function() {
-        // reset values for finding out matches
-        matchingList = [];
-        matches = [];
-        // reset score Panel
-        resetScorePanel();
-        winnerModal.style.display = "none";
-        resetGame(cardlist);
-    }); 
+    for (let i = 0; i < playagain.length; i++) {
+        playagain[i].addEventListener('click', function() {
+            // reset values for finding out matches
+            matchingList = [];
+            matches = [];
+            // reset score Panel
+            resetScorePanel();
+            winnerModal.style.display = "none";
+            resetGame(cardlist);
+        });
     }
-    
+
+}
+
+function resetClicksFunc(cards) {
+    return cards.forEach(card => {
+        return card.style.pointerEvents = "visible";
+    });
 }
 
 
 function resetGame(cards) {
-    const cardlist = [...cards];
-    initialGame(cardlist);
+    let cardlist = [...cards];
     // reenable click on all cards:
-    cardlist.forEach(card => {
-        return card.style.pointerEvents = "visible";
-    });
+    resetClicksFunc(cardlist);
+    initialGame(cardlist);
+    
+    hasGameStarted = false;
+    setUpTimer();
 }
 
 
@@ -209,10 +220,12 @@ function setupGame(cards) {
 
     // copy the cardList so that it doesn't get altered each time setup
     const cardlist = [...cards];
-    
+
     // initally sets up the game
     initialGame(cardlist);
 
+    // reenable click on all cards:
+    resetClicksFunc(cardlist);
 
     // shuffle cards
     const shuffledCardList = shuffleCards(cardlist);
@@ -228,7 +241,6 @@ function setupGame(cards) {
         });
     }, 2000);
 
-   
     setUpTimer();
     setupRestartButton(cardlist);
 
@@ -237,6 +249,9 @@ function setupGame(cards) {
         return card.addEventListener('click', function() {
             // opens the card
             openCard(card);
+
+            // starts timer when card is clicked
+            hasGameStarted = true;
 
             matchingList.push(card);
 
@@ -267,8 +282,6 @@ function setupGame(cards) {
             }
         });
     });
-    console.log('cardlist', cardlist);
-    console.log('matching list', matchingList, matches);
 } // end of setupGame function
 
 
@@ -278,4 +291,3 @@ function setupGame(cards) {
     /** INITATE GAME **/
     setupGame(cardList);
 })(cardList);
-
