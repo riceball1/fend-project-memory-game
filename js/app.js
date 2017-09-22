@@ -20,6 +20,8 @@ let counter = 0;
 let gameOverStatus = false;
 let stars = 3;
 let hasGameStarted = false;
+let numClicks = 0;
+let intervalID = '';
 
 /** METHODS **/
 
@@ -120,43 +122,36 @@ function checkGameCompletion(matcheslist, cardlist) {
     return false;
 }
 
-let counting = setInterval(function() {
-    countingUp()
-}, 1000);
 
 function countingUp() {
-    if (gameOverStatus) {
-        stopCounting();
-    }
     counter++;
     // only counts up in seconds (need formula to count up in minutes);
     document.getElementById('timer').innerHTML = counter + ' seconds';
 }
 
-function stopCounting() {
-    clearInterval(counting);
-}
-
 function setUpTimer() {
     const scorePanel = document.getElementsByClassName('score-panel')[0];
-    let timer = document.getElementById('timer');
-    // timer exists then just reset the setInterval counter
-    if (timer !== null) {
-        timer.innerHTML = '0 seconds';
-        counter = 0;
-        gameOverStatus = false;
-        if (hasGameStarted) {
-            counting = setInterval(function() {
-                countingUp()
-            }, 1000);
-        }
-
-    } else {
+    const timer = document.getElementById('timer');
+    if (timer === null) {
         scorePanel.innerHTML += '<p id="timer">0 seconds</p>';
-        if (hasGameStarted) {
-            counting;
-        }
+    } else {
+        timer.innerHTML = '0 seconds';
     }
+    counter = 0;
+    gameOverStatus = false;
+}
+
+
+
+
+function startTimer() {
+    console.log('this is running');
+    let counting = setInterval(countingUp, 1000);
+    intervalID = counting;
+}
+
+function stopTimer(timerID) {
+    clearInterval(timerID);
 }
 
 function resetScorePanel() {
@@ -191,6 +186,7 @@ function setupRestartButton(cardlist) {
             // reset score Panel
             resetScorePanel();
             winnerModal.style.display = "none";
+            numClicks = 0;
             resetGame(cardlist);
         });
     }
@@ -209,15 +205,15 @@ function resetGame(cards) {
     // reenable click on all cards:
     resetClicksFunc(cardlist);
     initialGame(cardlist);
-    
     hasGameStarted = false;
+    numClicks = 0;
     setUpTimer();
+    clearInterval(intervalID);
 }
 
 
 
 function setupGame(cards) {
-
     // copy the cardList so that it doesn't get altered each time setup
     const cardlist = [...cards];
 
@@ -252,6 +248,14 @@ function setupGame(cards) {
 
             // starts timer when card is clicked
             hasGameStarted = true;
+            numClicks++;
+            if (numClicks === 1) {
+                startTimer();
+            }
+
+            if (gameOverStatus) {
+                stopTimer(intervalID);
+            }
 
             matchingList.push(card);
 
@@ -276,10 +280,12 @@ function setupGame(cards) {
                 // checkingMoves(movesCounter);
                 if (checkGameCompletion(matches, cardlist)) {
                     gameOverStatus = true;
+                    stopTimer(intervalID);
                     const winnerMessage = document.getElementById('winner-message');
                     winnerMessage.innerHTML = 'Congratulations! You completed the game in ' + (counter + 1) + ' seconds and with ' + stars + ' stars left';
                 }
             }
+
         });
     });
 } // end of setupGame function
@@ -290,4 +296,5 @@ function setupGame(cards) {
 (function() {
     /** INITATE GAME **/
     setupGame(cardList);
+
 })(cardList);
