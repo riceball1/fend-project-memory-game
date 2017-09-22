@@ -9,6 +9,8 @@ Fixes to make:
 
 
 // Variables
+// list holds all cards
+const cardList = document.querySelectorAll('.card');
 let matchingList = [];
 let matches = [];
 let movesCounter = 0;
@@ -77,6 +79,7 @@ function flipOverCard(card) {
 }
 
 function checkMatch(card) {
+    console.log('checkMatch list 0', matchingList[0]);
     // check matches
     let firstCard = matchingList[0].innerHTML.toString();
     let secondCard = card.innerHTML.toString();
@@ -184,23 +187,31 @@ function setupRestartButton(cardlist) {
         // reset score Panel
         resetScorePanel();
         winnerModal.style.display = "none";
-        setupGame();
+        resetGame(cardlist);
     }); 
     }
     
 }
 
 
-function setupGame() {
-    // list holds all cards
-    const cardlist = document.querySelectorAll('.card');
-    // initally sets up the game
+function resetGame(cards) {
+    const cardlist = [...cards];
     initialGame(cardlist);
-
     // reenable click on all cards:
     cardlist.forEach(card => {
         return card.style.pointerEvents = "visible";
     });
+}
+
+
+
+function setupGame(cards) {
+
+    // copy the cardList so that it doesn't get altered each time setup
+    const cardlist = [...cards];
+    
+    // initally sets up the game
+    initialGame(cardlist);
 
 
     // shuffle cards
@@ -233,7 +244,6 @@ function setupGame() {
                 // add # of moves to moveCounter
                 // changes star ratings based on # of moves
                 checkingMoves();
-
                 // check if it matches
                 if (checkMatch(card)) {
                     matches.forEach(card => {
@@ -257,6 +267,8 @@ function setupGame() {
             }
         });
     });
+    console.log('cardlist', cardlist);
+    console.log('matching list', matchingList, matches);
 } // end of setupGame function
 
 
@@ -264,6 +276,6 @@ function setupGame() {
 
 (function() {
     /** INITATE GAME **/
-    setupGame();
-})();
+    setupGame(cardList);
+})(cardList);
 
