@@ -258,7 +258,8 @@ function setupGame(cards) {
             }
 
             matchingList.push(card);
-
+            // disable first card to avoid reclicking on it
+            matchingList[0].style.pointerEvents = "none";
             if (matchingList.length === 2) {
                 // add # of moves to moveCounter
                 // changes star ratings based on # of moves
@@ -270,6 +271,9 @@ function setupGame(cards) {
                     })
                     matchingList = [];
                 } else {
+                    // reenable click
+                    matchingList[0].style.pointerEvents = "visible";
+                    matchingList[1].style.pointerEvents = "visible";
                     // slow down the flipover
                     setTimeout(function() {
                         flipOverCard(matchingList[0]);
